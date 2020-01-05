@@ -6,17 +6,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class HiveRunner implements BenchmarkRunner {
-  final bool lazy;
-
-  HiveRunner(this.lazy);
-
   @override
-  String get name => lazy ? 'Hive (lazy)' : 'Hive';
+  String get name => 'Hive';
 
   @override
   Future<void> setUp() async {
-    if (lazy) return; // only do this work in the non-lazy runner
-
     var dir = await getApplicationDocumentsDirectory();
     var homePath = path.join(dir.path, 'hive');
     if (await Directory(homePath).exists()) {
@@ -28,13 +22,12 @@ class HiveRunner implements BenchmarkRunner {
 
   @override
   Future<void> tearDown() async {
-    if (lazy) return;
     await Hive.close();
   }
 
   @override
   Future<int> batchReadInt(List<String> keys) async {
-    final box = await Hive.openBox('box', lazy: lazy);
+    final box = await Hive.openBox('box');
     final s = Stopwatch()..start();
     for (var key in keys) {
       box.get(key);
@@ -51,7 +44,7 @@ class HiveRunner implements BenchmarkRunner {
 
   @override
   Future<int> batchWriteString(Map<String, dynamic> entries) async {
-    var box = await Hive.openBox('box', lazy: lazy);
+    var box = await Hive.openBox('box');
     var s = Stopwatch()..start();
     for (var key in entries.keys) {
       await box.put(key, entries[key]);
@@ -68,7 +61,7 @@ class HiveRunner implements BenchmarkRunner {
 
   @override
   Future<int> batchDeleteInt(List<String> keys) async {
-    var box = await Hive.openBox('box', lazy: lazy);
+    var box = await Hive.openBox('box');
     var s = Stopwatch()..start();
     for (var key in keys) {
       await box.delete(key);

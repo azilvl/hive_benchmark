@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:hive_benchmark/runners/hive.dart';
+import 'package:hive_benchmark/runners/lazy_hive.dart';
 import 'package:hive_benchmark/runners/moor_ffi.dart';
 import 'package:hive_benchmark/runners/runner.dart';
 import 'package:hive_benchmark/runners/shared_preferences.dart';
@@ -19,8 +20,8 @@ class Result {
 }
 
 final runners = [
-  HiveRunner(false),
-  HiveRunner(true),
+  HiveRunner(),
+  LazyHiveRunner(),
   SqfliteRunner(),
   SharedPreferencesRunner(),
   MoorFfiRunner(),
